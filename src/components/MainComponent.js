@@ -4,7 +4,7 @@ import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments';
 import { PROMOTIONS } from '../shared/promotions';
 import { LEADERS } from '../shared/leaders';
-//import DishDetailComponent from './DishDetailComponent';
+import DishDetailComponent from './DishDetailComponent';
 import HeaderComponent from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
@@ -34,6 +34,12 @@ class Main extends Component {
       );
     }
 
+    const DishWithId = ({ match }) => {
+      return (
+        <DishDetailComponent dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId, 10))[0]}
+          comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId, 10))} />
+      );
+    };
 
     //at line 32 passing the dish object to th DishDetailComponent
     return (
@@ -43,6 +49,7 @@ class Main extends Component {
           <Route path="/home" component={HomePage} />
           <Route exact path="/menu" component={() => <Menu dishes={this.state.dishes} />} />
           <Route exact path="/contactus" component={Contact} />
+          <Route path='/menu/:dishId' component={DishWithId} />
           <Redirect to="/home" />
         </Switch>
         <Footer />

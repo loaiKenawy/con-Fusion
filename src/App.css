@@ -31,3 +31,17 @@ address{
 .navbar-dark {
     background-color: #512DA8;
 }
+.comments-font{
+    font-size: 16px;
+    color: rgb(0, 0, 0);
+    font-style: normal;
+    text-align: left;
+
+}
+.author-font{
+    font-size: 18px;
+    color: rgb(0, 0, 0);
+    font-style: bold;
+    text-align: left;
+
+}
