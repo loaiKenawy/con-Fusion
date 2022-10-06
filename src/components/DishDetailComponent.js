@@ -1,12 +1,42 @@
 import React, { Component } from 'react';
 import {
     Card, CardImg, CardText, CardBody,
-    CardTitle,
-    Media, Breadcrumb, BreadcrumbItem
+    CardTitle, Button,
+    Media, Breadcrumb, BreadcrumbItem, Modal, ModalHeader, ModalBody, Label,
+    Col, Row
 } from 'reactstrap';
+import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 
+
+
+const required = (val) => val && val.length;
+const maxLength = (len) => (val) => !(val) || (val.length <= len);
+const minLength = (len) => (val) => (val) && (val.length >= len);
+
+
+
 class DishDetailComponent extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isModalOpen: false
+        };
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        });
+    }
+
+    handleSubmit(values) {
+        alert('Current State is: ' + JSON.stringify(values));
+        //event.preventDefault();
+    }
 
     renderComments(comments) {
 
@@ -28,6 +58,71 @@ class DishDetailComponent extends Component {
             </div>
 
         );
+    }
+
+    renderAddCommentForm() {
+        return (
+            <div className='container'>
+
+                <Button outline onClick={this.toggleModal}><span className='fa fa-thin fa-pencil'></span> Submit Comment</Button>
+
+                <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+                    <ModalHeader toggle={this.toggleModal}>
+                        Submit Comment
+                    </ModalHeader>
+                    <ModalBody>
+                        <LocalForm onSubmit={(values) => this.handleSubmit(values)}>
+                            <Label htmlFor="Rating">Rating</Label>
+                            <Col >
+                                <Control.select model=".Rating" id="Rating" name="Rating"
+                                    placeholder="Rating"
+                                    className="form-control">
+                                    <option>1</option>
+                                    <option>2</option>
+                                    <option>3</option>
+                                    <option>4</option>
+                                    <option>5</option>
+                                </Control.select>
+                            </Col>
+                            <Label htmlFor="Name" className="mx-auto my-2">Name</Label>
+                            <Col >
+                                <Control.text model=".Name" id="Name" name="Name"
+                                    placeholder="Name"
+                                    className="form-control"
+                                    validators={{
+                                        required, minLength: minLength(3), maxLength: maxLength(15)
+                                    }}
+                                />
+                                <Errors
+                                    className="text-danger"
+                                    model=".Name"
+                                    show="touched"
+                                    messages={{
+                                        required: 'Required',
+                                        minLength: 'Must be greater than 2 characters',
+                                        maxLength: 'Must be 15 characters or less'
+                                    }}
+                                />
+                            </Col>
+                            <Label htmlFor="message" className="mx-auto my-2" >Comment</Label>
+                            <Col >
+                                <Control.textarea model=".message" id="message" name="message"
+                                    rows="12"
+                                    className="form-control" />
+                            </Col>
+
+                            <Col  className="mx-auto my-2">
+                                <Button type="submit" color="primary">
+                                    Submit
+                                </Button>
+                            </Col>
+                        </LocalForm>
+                    </ModalBody>
+
+                </Modal>
+            </div >
+        );
+
     }
 
     render() {
@@ -58,6 +153,7 @@ class DishDetailComponent extends Component {
                         </div>
                         <div className="col-12 col-md-5 m-1" >
                             {this.renderComments(this.props.comments)}
+                            {this.renderAddCommentForm()}
                         </div>
                     </div>
                 </div>
@@ -69,6 +165,6 @@ class DishDetailComponent extends Component {
 
     }
 
-
+    
 }
 export default DishDetailComponent;
