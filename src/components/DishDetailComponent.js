@@ -15,9 +15,29 @@ const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => (val) && (val.length >= len);
 
 
+function RenderComments({ comments, addComment, dishId }) {
 
-class DishDetailComponent extends Component {
+    const dishComments = comments.map((comment) => {
+        return (
+            <div >
+                <p className='comments-font'>{comment.comment}</p>
+                <p className='author-font'>-{comment.author}</p>
+                <p className='author-font'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
+            </div>
+        );
+    });
+    return (
+        <div className="container">
+            <h1>Comments</h1>
+            <Media list>
+                {dishComments}
+            </Media>
+            <CommentForm dishId={dishId} addComment={addComment} />
+        </div>
 
+    );
+}
+class CommentForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -34,33 +54,14 @@ class DishDetailComponent extends Component {
     }
 
     handleSubmit(values) {
-        alert('Current State is: ' + JSON.stringify(values));
+        this.toggleModal();
+        this.props.addComment(this.props.dishId, values.Rating, values.Name, values.message);
         //event.preventDefault();
     }
 
-    renderComments(comments) {
 
-        const dishComments = comments.map((comment) => {
-            return (
-                <div >
-                    <p className='comments-font'>{comment.comment}</p>
-                    <p className='author-font'>-{comment.author}</p>
-                    <p className='author-font'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
-                </div>
-            );
-        });
-        return (
-            <div className="container">
-                <h1>Comments</h1>
-                <Media list>
-                    {dishComments}
-                </Media>
-            </div>
 
-        );
-    }
-
-    renderAddCommentForm() {
+    render() {
         return (
             <div className='container'>
 
@@ -111,7 +112,7 @@ class DishDetailComponent extends Component {
                                     className="form-control" />
                             </Col>
 
-                            <Col  className="mx-auto my-2">
+                            <Col className="mx-auto my-2">
                                 <Button type="submit" color="primary">
                                     Submit
                                 </Button>
@@ -123,6 +124,12 @@ class DishDetailComponent extends Component {
             </div >
         );
 
+    }
+
+}
+class DishDetailComponent extends Component {
+    constructor(props) {
+        super(props);
     }
 
     render() {
@@ -152,8 +159,10 @@ class DishDetailComponent extends Component {
                             </Card>
                         </div>
                         <div className="col-12 col-md-5 m-1" >
-                            {this.renderComments(this.props.comments)}
-                            {this.renderAddCommentForm()}
+                            <RenderComments comments={this.props.comments}
+                                addComment={this.props.addComment}
+                                dishId={this.props.dish.id}
+                            />
                         </div>
                     </div>
                 </div>
@@ -165,6 +174,7 @@ class DishDetailComponent extends Component {
 
     }
 
-    
+    // {this.renderComments(this.props.comments,this.props.addComment, this.props.dish.id)}
+    // {this.renderAddCommentForm()}
 }
 export default DishDetailComponent;
