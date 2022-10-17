@@ -3,7 +3,7 @@ import {
     Card, CardImg, CardText, CardBody,
     CardTitle, Button,
     Media, Breadcrumb, BreadcrumbItem, Modal, ModalHeader, ModalBody, Label,
-    Col, Row
+    Col
 } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
@@ -16,15 +16,18 @@ const maxLength = (len) => (val) => !(val) || (val.length <= len);
 const minLength = (len) => (val) => (val) && (val.length >= len);
 
 
-function RenderComments({ comments, addComment, dishId }) {
+function RenderComments({ comments, postComment, dishId }) {
 
     const dishComments = comments.map((comment) => {
         return (
             <div >
-                <p className='comments-font'>{comment.comment}</p>
-                <p className='author-font'>-{comment.author}</p>
-                <p className='author-font'>{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
-            </div>
+                <span style={{ fontWeight: 'bold' }}>{comment.comment}</span>
+
+                    <p className='author-font'>-{comment.author}</p>
+                    <p >{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
+
+
+            </div >
         );
     });
     return (
@@ -33,7 +36,7 @@ function RenderComments({ comments, addComment, dishId }) {
             <Media list>
                 {dishComments}
             </Media>
-            <CommentForm dishId={dishId} addComment={addComment} />
+            <CommentForm dishId={dishId} postComment={postComment} />
         </div>
 
     );
@@ -56,7 +59,7 @@ class CommentForm extends Component {
 
     handleSubmit(values) {
         this.toggleModal();
-        this.props.addComment(this.props.dishId, values.Rating, values.Name, values.message);
+        this.props.postComment(this.props.dishId, values.Rating, values.Name, values.message);
         //event.preventDefault();
     }
 
@@ -144,7 +147,7 @@ class DishDetailComponent extends Component {
             );
         }
         else if (this.props.errMess) {
-      
+
             return (
                 <div className='container'>
                     <div className='row'>
@@ -179,7 +182,7 @@ class DishDetailComponent extends Component {
                         </div>
                         <div className="col-12 col-md-5 m-1" >
                             <RenderComments comments={this.props.comments}
-                                addComment={this.props.addComment}
+                                postComment={this.props.postComment}
                                 dishId={this.props.dish.id}
                             />
                         </div>
