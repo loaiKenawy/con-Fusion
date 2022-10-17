@@ -144,6 +144,7 @@ class DishDetailComponent extends Component {
             );
         }
         else if (this.props.errMess) {
+      
             return (
                 <div className='container'>
                     <div className='row'>
@@ -187,8 +188,5 @@ class DishDetailComponent extends Component {
             );
 
     }
-
-    // {this.renderComments(this.props.comments, this.props.addComment, this.props.dish.id)}
-    // {this.renderAddCommentForm()}
 }
 export default DishDetailComponent;
