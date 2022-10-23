@@ -9,7 +9,7 @@ import { Control, LocalForm, Errors } from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
-
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -19,17 +19,16 @@ const minLength = (len) => (val) => (val) && (val.length >= len);
 function RenderComments({ comments, postComment, dishId }) {
 
     const dishComments = comments.map((comment) => {
+
         return (
             <div >
                 <span style={{ fontWeight: 'bold' }}>{comment.comment}</span>
-
-                    <p className='author-font'>-{comment.author}</p>
-                    <p >{new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
-
-
+                <p className='author-font'>-{comment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
+                <p ></p>
             </div >
         );
     });
+
     return (
         <div className="container">
             <h1>Comments</h1>
@@ -172,6 +171,7 @@ class DishDetailComponent extends Component {
                     </div>
                     <div className="row">
                         <div className="col-12 col-md-5 m-1">
+
                             <Card>
                                 <CardImg top src={baseUrl + this.props.dish.image} alt={this.props.dish.name} />
                                 <CardBody>
@@ -179,6 +179,7 @@ class DishDetailComponent extends Component {
                                     <CardText>{this.props.dish.description}</CardText>
                                 </CardBody>
                             </Card>
+
                         </div>
                         <div className="col-12 col-md-5 m-1" >
                             <RenderComments comments={this.props.comments}
