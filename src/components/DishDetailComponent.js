@@ -18,25 +18,27 @@ const minLength = (len) => (val) => (val) && (val.length >= len);
 
 function RenderComments({ comments, postComment, dishId }) {
 
-    const dishComments = comments.map((comment) => {
-
-        return (
-            <div >
-                <span style={{ fontWeight: 'bold' }}>{comment.comment}</span>
-                <p className='author-font'>-{comment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
-                <p ></p>
-            </div >
-        );
-    });
 
     return (
         <div className="container">
             <h1>Comments</h1>
+
             <Media list>
-                {dishComments}
+                <Stagger in>
+                    {comments.map((comment) => {
+
+                        return (
+                            <div >
+                                <span style={{ fontWeight: 'bold' }}>{comment.comment}</span>
+                                <p className='author-font'>-{comment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
+                                <p ></p>
+                            </div >
+                        );
+                    })}
+                </Stagger>
             </Media>
             <CommentForm dishId={dishId} postComment={postComment} />
-        </div>
+        </div >
 
     );
 }
@@ -172,14 +174,19 @@ class DishDetailComponent extends Component {
                     <div className="row">
                         <div className="col-12 col-md-5 m-1">
 
-                            <Card>
-                                <CardImg top src={baseUrl + this.props.dish.image} alt={this.props.dish.name} />
-                                <CardBody>
-                                    <CardTitle>{this.props.dish.name}</CardTitle>
-                                    <CardText>{this.props.dish.description}</CardText>
-                                </CardBody>
-                            </Card>
-
+                            <FadeTransform
+                                in
+                                transformProps={{
+                                    exitTransform: 'scale(0.5) translateY(-50%)'
+                                }}>
+                                <Card>
+                                    <CardImg top src={baseUrl + this.props.dish.image} alt={this.props.dish.name} />
+                                    <CardBody>
+                                        <CardTitle>{this.props.dish.name}</CardTitle>
+                                        <CardText>{this.props.dish.description}</CardText>
+                                    </CardBody>
+                                </Card>
+                            </FadeTransform>
                         </div>
                         <div className="col-12 col-md-5 m-1" >
                             <RenderComments comments={this.props.comments}
@@ -188,7 +195,7 @@ class DishDetailComponent extends Component {
                             />
                         </div>
                     </div>
-                </div>
+                </div >
             );
 
     }
